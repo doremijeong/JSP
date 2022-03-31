@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="memberMgm">
+	<select id="allMember" parameterType="member.vo.PagingVO" resultType="member">
+		SELECT AA.*
+ 		 FROM(SELECT A.*, ROWNUM AS RNUM
+         		FROM(SELECT ID,  NAME,   PHONE,  EMAIL
+                	   FROM MEMBER) A) AA
+ 		WHERE RNUM BETWEEN #{firstRecNo} AND #{lastRecNo}
+	</select>
+	
+	<select id="detailMember" resultType="member" parameterType="String">
+		SELECT * FROM MEMBER WHERE ID = #{id}
+	</select>
+	
+	<insert id="memRegistration" parameterType="member">
+		INSERT INTO MEMBER 
+		VALUES(
+			   #{id},
+			   #{pwd},
+			   #{email},
+			   #{picture},
+			   #{enabled},
+			   #{regdate},
+			   #{phone},
+			   #{name},
+			   #{register},
+			   #{address},
+			   #{authority}
+			   )
+	</insert>
+	
+	
+	<update id="updateMember" parameterType="member">
+		UPDATE MEMBER 
+		   SET PWD=#{pwd}
+		      ,EMAIL=#{email}
+		      ,PICTURE=#{picture}
+		      ,ENABLED=#{enabled}
+		      ,REGDATE=#{regdate}
+		      ,PHONE=#{phone}
+		      ,NAME=#{name}
+		      ,REGISTER= #{register}
+		      ,ADDRESS=#{address}
+		      ,AUTHORITY=#{authority}
+		 WHERE ID=#{id}
+	</update>
+	
+	<delete id="deleteMember" parameterType="String">
+		DELETE MEMBER WHERE ID=#{id}
+	</delete>
+	
+	<select id="searchMember" parameterType="member" resultType="member">
+		
+		SELECT * FROM MEMBER 
+		where 1=1
+		
+		<if test="id != null">
+		and ID = #{id}
+		</if>
+		<if test="name != null">
+		and NAME = #{name}
+		</if>
+		<if test="phone != null">
+		and PHONE = #{phone}
+		</if>
+		<if test="email != null">
+		and EMAIL = #{email}
+		</if>
+		
+		
+	</select>
+	
+	<select id="totalCnt" resultType="int">
+		SELECT COUNT(*) FROM MEMBER
+	</select>
+	
+	<select id="chkMember" resultType="String" parameterType="String">
+		SELECT ID FROM MEMBER WHERE ID= #id#
+	</select>
+	
+
+</mapper>
+  
